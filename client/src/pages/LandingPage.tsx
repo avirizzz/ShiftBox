@@ -138,13 +138,13 @@ export default function LandingPage() {
                     {user ? (
                       <>
                         <button 
-                          onClick={() => navigate('/app')}
+                          onClick={() => navigate('/app/projects')}
                           className="bg-white text-black px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center gap-2"
                         >
                           Move someplace new <ArrowRight size={18} />
                         </button>
                         <button 
-                          onClick={() => navigate('/app')}
+                          onClick={() => navigate('/app/projects')}
                           className="liquid-glass border border-white/20 text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-black transition-colors"
                         >
                           Manage previous shifts

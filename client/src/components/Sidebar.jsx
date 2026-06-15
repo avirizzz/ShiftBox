@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ScanLine, FileDown, FileSpreadsheet, Boxes, QrCode, Menu, X, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, ScanLine, FileDown, FileSpreadsheet, Boxes, QrCode, Menu, X, User, LogOut, Home } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { api } from '../api';
 
@@ -11,6 +11,7 @@ function Sidebar() {
   const { user, logout } = useAuth();
 
   const navItems = [
+    { id: 'projects', icon: Home, label: 'Projects', path: '/app/projects' },
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard', path: '/app/' },
     { id: 'categories', icon: Boxes, label: 'Categories', path: '/app/categories' },
     { id: 'scanner', icon: ScanLine, label: 'Scanner', path: '/app/scanner' },

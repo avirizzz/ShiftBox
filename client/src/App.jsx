@@ -3,6 +3,7 @@ import { ToastProvider } from './components/ToastContext';
 import { AuthProvider } from './components/AuthContext';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
+import Projects from './pages/Projects';
 import Categories from './pages/Categories';
 import CategoryDetail from './pages/CategoryDetail';
 import Scanner from './pages/Scanner';
@@ -15,11 +16,14 @@ import { Navigate } from 'react-router-dom';
 
 function InternalLayout() {
   return (
-    <div className="flex min-h-screen relative z-10 bg-[url('/assets/mobile.png')] md:bg-[url('/assets/desktop.jpg')] bg-auto bg-center bg-no-repeat bg-fixed">
+    <div className="flex min-h-screen relative z-10">
+      {/* Fixed background layer for iOS compatibility */}
+      <div className="fixed inset-0 z-[-1] bg-[url('/assets/mobile.png')] md:bg-[url('/assets/desktop.jpg')] bg-cover bg-center bg-no-repeat pointer-events-none" />
       <Sidebar />
       <main className="flex-1 w-full max-w-7xl mx-auto p-4 pt-20 sm:p-6 sm:pt-24 md:p-8 md:pt-8 pb-12 md:pb-12 md:pl-[100px] lg:pl-[120px] min-h-screen">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/category/:id" element={<CategoryDetail />} />
           <Route path="/scanner" element={<Scanner />} />
