@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+}
+
+:root {
+  --color-bg-base: #000000;
+  --color-text-main: #ffffff;
+  --color-text-muted: #d1d5db; /* Tailwind gray-300 */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ═══ Liquid Glass (Hero VEX Spec) ═══ */
+.liquid-glass {
+  background: rgba(0, 0, 0, 0.4);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 20%,
+    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+    rgba(255,255,255,0.1) 80%, rgba(255,255,255,0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Fallback for components still using old glass classes before they are converted */
+.glass-panel, .glass-card {
+  @apply bg-black/40 backdrop-blur-md border border-white/10 rounded-xl relative overflow-hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.btn-premium {
+  @apply bg-white text-black px-6 py-2 rounded-lg font-medium transition hover:bg-gray-100;
+}
+
+.btn-glass {
+  @apply border border-white/20 text-white px-6 py-2 rounded-lg font-medium transition hover:bg-white hover:text-black;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+}
+
+.btn-icon {
+  @apply w-10 h-10 p-0 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-gray-400 cursor-pointer transition hover:bg-white/10 hover:text-white;
+}
+
+.status-chip {
+  @apply px-3 py-1 rounded-full text-xs font-bold uppercase inline-flex items-center gap-1.5 tracking-wide;
+}
+.status-planned { @apply bg-white/10 text-gray-300; }
+.status-packed { @apply bg-orange-500/20 text-orange-400; }
+.status-loaded { @apply bg-cyan-500/20 text-cyan-400; }
+.status-unloaded { @apply bg-purple-500/20 text-purple-400; }
+.status-verified { @apply bg-green-500/20 text-green-400; }
