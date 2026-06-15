@@ -86,6 +86,26 @@ app.post('/api/projects', requireAuth, async (req, res) => {
   res.status(201).json(data);
 });
 
+app.put('/api/projects/:id', requireAuth, async (req, res) => {
+  const { name, description } = req.body;
+  const { data, error } = await supabase.from('projects')
+    .update({ name, description })
+    .eq('id', req.params.id)
+    .eq('user_id', req.user.id)
+    .select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.delete('/api/projects/:id', requireAuth, async (req, res) => {
+  const { error } = await supabase.from('projects')
+    .delete()
+    .eq('id', req.params.id)
+    .eq('user_id', req.user.id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ success: true });
+});
+
 app.get('/api/categories', requireAuth, async (req, res) => {
   const { projectId } = req.query;
   const { data: userProjects } = await supabase.from('projects').select('id').eq('user_id', req.user.id);

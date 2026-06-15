@@ -25,6 +25,8 @@ export const api = {
 
   getProjects: () => request(`${API_URL}/projects`),
   createProject: (data) => request(`${API_URL}/projects`, { method: 'POST', body: JSON.stringify(data) }),
+  updateProject: (id, data) => request(`${API_URL}/projects/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteProject: (id) => request(`${API_URL}/projects/${id}`, { method: 'DELETE' }),
 
   getCategories: () => request(`${API_URL}/categories`),
   createCategory: (data) => request(`${API_URL}/categories`, { method: 'POST', body: JSON.stringify(data) }),

@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useToast } from '../components/ToastContext';
-import { Plus, Home, ChevronRight, X, Calendar } from 'lucide-react';
+import { Plus, Home, ChevronRight, X, Calendar, Edit2, Trash2, Save } from 'lucide-react';
 
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [newProject, setNewProject] = useState({ name: '', description: '' });
+  const [editingProject, setEditingProject] = useState(null);
+  const [editData, setEditData] = useState({ name: '', description: '' });
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -35,6 +37,34 @@ function Projects() {
       setShowCreate(false);
       fetchProjects();
     } catch { toast('Failed to create project', 'error'); }
+  };
+
+  const handleUpdateProject = async (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await api.updateProject(id, editData);
+      toast('Shift updated', 'success');
+      setEditingProject(null);
+      fetchProjects();
+    } catch { toast('Failed to update shift', 'error'); }
+  };
+
+  const handleDeleteProject = async (e, id) => {
+    e.stopPropagation();
+    if (confirm('Are you sure you want to delete this shift? All categories and boxes inside it will be permanently deleted.')) {
+      try {
+        await api.deleteProject(id);
+        toast('Shift deleted', 'success');
+        fetchProjects();
+      } catch { toast('Failed to delete shift', 'error'); }
+    }
+  };
+
+  const startEdit = (e, proj) => {
+    e.stopPropagation();
+    setEditingProject(proj.id);
+    setEditData({ name: proj.name, description: proj.description });
   };
 
   const handleSelectProject = (projectId) => {
@@ -90,17 +120,54 @@ function Projects() {
               <div className="absolute -right-6 -top-6 text-white/5 group-hover:text-white/10 transition-colors pointer-events-none">
                 <Home size={120} />
               </div>
-              <div className="flex justify-between items-start mb-2 relative z-10">
-                <h3 className="text-2xl font-medium tracking-tight">{proj.name}</h3>
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-colors">
-                  <ChevronRight size={18} />
+              {editingProject === proj.id ? (
+                <div onClick={e => e.stopPropagation()} className="relative z-10 w-full">
+                  <div className="flex justify-between items-start mb-2">
+                    <input 
+                      value={editData.name} 
+                      onChange={e => setEditData({...editData, name: e.target.value})}
+                      className="bg-white/10 border border-white/20 rounded px-2 py-1 text-xl font-medium w-[80%] focus:outline-none"
+                      autoFocus
+                    />
+                    <button onClick={(e) => handleUpdateProject(e, proj.id)} className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-gray-200">
+                      <Save size={16} />
+                    </button>
+                  </div>
+                  <textarea 
+                    value={editData.description} 
+                    onChange={e => setEditData({...editData, description: e.target.value})}
+                    className="bg-white/10 border border-white/20 rounded px-2 py-1 text-sm w-full mt-2 focus:outline-none resize-none"
+                    rows={2}
+                  />
+                  <div className="mt-4 flex gap-2">
+                    <button onClick={(e) => { e.stopPropagation(); setEditingProject(null); }} className="text-xs text-gray-400 hover:text-white px-2 py-1">Cancel</button>
+                  </div>
                 </div>
-              </div>
-              {proj.description && <p className="text-gray-400 text-sm mb-6 relative z-10">{proj.description}</p>}
-              <div className="mt-auto pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-gray-500 relative z-10">
-                <Calendar size={14} />
-                Created {new Date(proj.created_at).toLocaleDateString()}
-              </div>
+              ) : (
+                <>
+                  <div className="flex justify-between items-start mb-2 relative z-10 w-full">
+                    <h3 className="text-2xl font-medium tracking-tight pr-8">{proj.name}</h3>
+                    <div className="flex gap-2">
+                      <button onClick={(e) => startEdit(e, proj)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/20 hover:text-white transition-colors">
+                        <Edit2 size={14} />
+                      </button>
+                      <button onClick={(e) => handleDeleteProject(e, proj.id)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-red-500/20 hover:text-red-400 transition-colors">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                  {proj.description && <p className="text-gray-400 text-sm mb-6 relative z-10">{proj.description}</p>}
+                  <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2 text-xs text-gray-500 relative z-10 w-full">
+                    <div className="flex items-center gap-2">
+                      <Calendar size={14} /> 
+                      Created {new Date(proj.created_at).toLocaleDateString()}
+                    </div>
+                    <div className="flex items-center text-white/50 group-hover:text-white transition-colors">
+                      Enter <ChevronRight size={14} />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
