@@ -79,8 +79,8 @@ function Scanner() {
       }
 
       const boxData = await api.scanBox(boxId);
-      setScannedBox(boxData);
       toast(`Scanned: ${boxData.box_number}`, 'success');
+      navigate(`/app/box/${boxData.id}`);
     } catch (err) {
       toast('Box not found for this QR code', 'error');
       setScanSuccess(false);
@@ -109,7 +109,7 @@ function Scanner() {
         <p className="text-gray-400 mt-1">Scan a box QR code to view and update instantly</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="max-w-2xl mx-auto">
         {}
         <div className="liquid-glass rounded-2xl overflow-hidden relative min-h-[400px] flex flex-col items-center justify-center border border-white/5 shadow-2xl">
           <div id="qr-reader" className="w-full [&>video]:w-full [&>video]:object-cover" />
@@ -154,58 +154,6 @@ function Scanner() {
             </div>
           )}
         </div>
-
-        {}
-        {scannedBox && (
-          <div className="liquid-glass rounded-2xl p-6 border border-white/5 animate-in slide-in-from-right-8 duration-500">
-            <div className="flex items-center gap-2 text-green-400 bg-green-400/10 px-3 py-1.5 rounded-lg w-fit mb-6 border border-green-400/20">
-              <Zap size={16} />
-              <span className="text-sm font-medium uppercase tracking-wider">Scan Successful</span>
-            </div>
-
-            <div className="mb-8 border-b border-white/10 pb-6">
-              <h2 className="text-4xl font-bold mb-3">{scannedBox.box_number}</h2>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="w-3 h-3 rounded bg-white" style={{background: scannedBox.category_color}} />
-                <span className="text-gray-300">{scannedBox.category_name}</span>
-              </div>
-              <span className={`status-chip status-${scannedBox.status?.toLowerCase()}`}>
-                {scannedBox.status}
-              </span>
-
-              {scannedBox.notes && (
-                <div className="mt-6 flex items-start gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
-                  <Package size={18} className="text-gray-400 shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-300">{scannedBox.notes}</span>
-                </div>
-              )}
-            </div>
-
-            {}
-            <div className="mb-8">
-              <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Quick Status Update</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {STATUSES.map(s => (
-                  <button key={s}
-                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors border ${scannedBox.status === s ? 'bg-white text-black border-white' : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'}`}
-                    onClick={() => handleQuickStatus(s)}
-                    disabled={updating || scannedBox.status === s}>
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button className="flex-1 bg-white/10 border border-white/20 text-white px-4 py-3 rounded-xl text-sm font-medium hover:bg-white/20 transition-colors flex items-center justify-center gap-2" onClick={() => navigate(`/app/box/${scannedBox.id}`)}>
-                View Details <ChevronRight size={16} />
-              </button>
-              <button className="flex-1 bg-white text-black px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2" onClick={() => { setScannedBox(null); setScanSuccess(false); startScanner(); }}>
-                <ScanLine size={16} /> Scan Another
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
